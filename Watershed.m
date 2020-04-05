@@ -70,6 +70,7 @@ imshow(bgm); title('Watershed Ridge Lines');
 %final output option 1:
 imshow(labeloverlay(img,labels)); title('Markers & Object Boundaries on Original Image');
 %option 2:
+figure;
 imshow(img);hold on; 
 himage = imshow(Lrgb);
 himage.AlphaData = 0.3;
