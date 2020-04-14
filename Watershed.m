@@ -22,13 +22,13 @@ gmag = imgradient(img);
 L = watershed(gmag);
 Lrgb = label2rgb(L);
 %Foreground objects marking
-se = strel('disk',20);
-io = imopen(img,se);
+se = strel('disk',20);  %creates disk-shaped structuring element with radius 20
+io = imopen(img,se);    %removes obects less than radius
 %opening-by-reconstruction
-ie = imerode(img,se);
-obr = imreconstruct(ie,img);
+ie = imerode(img,se);    %erode greyscale to simplify objects
+obr = imreconstruct(ie,img);    %constuct result from eroded and original img
 %morphological closing
-ioc = imclose(io,se);
+ioc = imclose(io,se);   %merges objects together
 %opening-closing by reconstruction
 iobrd = imdilate(obr,se);
 iobrcbr = imreconstruct(imcomplement(iobrd),imcomplement(obr));
@@ -41,13 +41,13 @@ fgm2 = imclose(fgm,se2);
 fgm3 = imclose(fgm2,se2);
 fgm4 = bwareaopen(fgm3,20);
 %background markers
-bw = imbinarize(iobrcbr);
+bw = imbinarize(iobrcbr); %convert to binary
 %watershed ridge lines
-d = bwdist(bw);
+d = bwdist(bw); %euclidian distance transform
 dl = watershed(d);
 bgm = dl == 0;
 %watershed transform
-gmag2 = imimposemin(gmag, bgm | fgm4);
+gmag2 = imimposemin(gmag, bgm | fgm4);%impose minima
 L = watershed(gmag2);
 %create labels
 labels = imdilate(L==0,ones(3,3)) + 2*bgm + 3*fgm4;
